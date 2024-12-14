@@ -378,7 +378,7 @@ class MyUI(QWidget):
 
 
 if __name__ == '__main__':
-    camera_mode = 'hik'  # 'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）
+    camera_mode = 'video'  # 'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）
     camera_image = None
     state = 'B'  # R:红方/B:蓝方
 
