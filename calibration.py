@@ -122,13 +122,34 @@ def hik_camera_get():
             print("no data[0x%x]" % ret)
 
 
+# 添加相机去畸变
+camera_matrix = np.array([[8.212994021887790e+02, 0, 3.269385912754655e+02],
+                              [0, 8.218191850196525e+02, 2.551679938869080e+02],
+                              [0, 0, 1]], dtype=np.float32)
+dist_coeffs = np.array([-0.404626869122769, -0.049201227422671, 0, 0, 0], dtype=np.float32)
+
+w = 640
+h = 480
+
+# 计算新的相机矩阵和畸变校正映射
+camera_matrix = np.array([[8.212994021887790e+02, 0, 3.269385912754655e+02],
+                              [0, 8.218191850196525e+02, 2.551679938869080e+02],
+                              [0, 0, 1]], dtype=np.float32)
+dist_coeffs = np.array([-0.404626869122769, -0.049201227422671, 0, 0, 0], dtype=np.float32)
+
+w = 640
+h = 480
+
+# 计算新的相机矩阵和畸变校正映射
+new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, dist_coeffs, (w, h), 1, (w, h))
+mapx, mapy = cv2.initUndistortRectifyMap(camera_matrix, dist_coeffs, None, new_camera_matrix, (w, h), 5)
 def video_capture_get():
     global camera_image
-    cam = cv2.VideoCapture(1)
+    cam = cv2.VideoCapture(0)  # 相机
     while True:
         ret, img = cam.read()
         if ret:
-            camera_image = img
+            camera_image = cv2.remap(img, mapx, mapy, cv2.INTER_LINEAR)
             time.sleep(0.016)  # 60fps
 
 
