@@ -293,7 +293,7 @@ def hik_camera_get():
 
 def video_capture_get():
     global camera_image
-    cam = cv2.VideoCapture(1)
+    cam = cv2.VideoCapture(0)
     while True:
         ret, img = cam.read()
         if ret:
@@ -624,8 +624,8 @@ detector_next = YOLOv5Detector(weights_path_next, data='yaml/armor.yaml', conf_t
 
 
 # 图像测试模式（获取图像根据自己的设备，在）
-camera_mode = 'test'  # 'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）
-ser1 = serial.Serial('COM19', 115200, timeout=1)  # 串口，替换 'COM1' 为你的串口号
+camera_mode = 'video'  # 'test':测试模式,'hik':海康相机,'video':USB相机（videocapture）
+ser1 = serial.Serial('COM3', 115200, timeout=1)  # 串口，替换 'COM1' 为你的串口号
 # 串口接收线程
 thread_receive = threading.Thread(target=ser_receive, daemon=True)
 thread_receive.start()
