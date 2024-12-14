@@ -140,7 +140,6 @@ dist_coeffs = np.array([-0.404626869122769, -0.049201227422671, 0, 0, 0], dtype=
 w = 640
 h = 480
 
-# 计算新的相机矩阵和畸变校正映射
 new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, dist_coeffs, (w, h), 1, (w, h))
 mapx, mapy = cv2.initUndistortRectifyMap(camera_matrix, dist_coeffs, None, new_camera_matrix, (w, h), 5)
 def video_capture_get():
