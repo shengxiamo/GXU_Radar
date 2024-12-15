@@ -185,21 +185,21 @@ class MyUI(QWidget):
         self.left_bottom_text.setFixedSize(300, 60)
 
         # 右下角部分
-        self.button1 = QPushButton('开始标定', self)
-        self.button1.setFixedSize(100, 30)
-        self.button1.clicked.connect(self.button1_clicked)
+        self.button_start_calibration = QPushButton('开始标定', self)
+        self.button_start_calibration.setFixedSize(100, 30)
+        self.button_start_calibration.clicked.connect(self.button_start_calibration_clicked)
 
-        self.button2 = QPushButton('切换高度', self)
-        self.button2.setFixedSize(100, 30)
-        self.button2.clicked.connect(self.button2_clicked)
+        self.button_switch_height = QPushButton('切换高度', self)
+        self.button_switch_height.setFixedSize(100, 30)
+        self.button_switch_height.clicked.connect(self.button_switch_height_clicked)
 
-        self.button3 = QPushButton('加载坐标', self)
-        self.button3.setFixedSize(100, 30)
-        self.button3.clicked.connect(self.button3_clicked)
+        self.button_load_coord = QPushButton('加载坐标', self)
+        self.button_load_coord.setFixedSize(100, 30)
+        self.button_load_coord.clicked.connect(self.button_load_coord_clicked)
 
-        self.button4 = QPushButton('保存计算', self)
-        self.button4.setFixedSize(100, 30)
-        self.button4.clicked.connect(self.button4_clicked)
+        self.button_save_compution = QPushButton('保存计算', self)
+        self.button_save_compution.setFixedSize(100, 30)
+        self.button_save_compution.clicked.connect(self.button_save_compution_clicked)
         self.height = 0
         self.T = []
         if self.state == 'R':
@@ -230,16 +230,16 @@ class MyUI(QWidget):
         self.camera_timer.timeout.connect(self.update_camera)
         self.camera_timer.start(50)  # 50毫秒更新一次相机
         # 设置按钮样式
-        self.set_button_style(self.button1)
-        self.set_button_style(self.button2)
-        self.set_button_style(self.button3)
-        self.set_button_style(self.button4)
+        self.set_button_style(self.button_start_calibration)
+        self.set_button_style(self.button_switch_height)
+        self.set_button_style(self.button_load_coord)
+        self.set_button_style(self.button_save_compution)
 
         grid_layout = QGridLayout()
-        grid_layout.addWidget(self.button1, 0, 0)
-        grid_layout.addWidget(self.button2, 0, 1)
-        grid_layout.addWidget(self.button3, 1, 0)
-        grid_layout.addWidget(self.button4, 1, 1)
+        grid_layout.addWidget(self.button_start_calibration, 0, 0)
+        grid_layout.addWidget(self.button_switch_height, 0, 1)
+        grid_layout.addWidget(self.button_load_coord, 1, 0)
+        grid_layout.addWidget(self.button_save_compution, 1, 1)
 
         buttons_and_text_widget = QWidget()
 
@@ -319,14 +319,14 @@ class MyUI(QWidget):
             self.update_images()
             self.append_text(f'地图真实点击坐标：({x}, {y})')
 
-    def button1_clicked(self):
-        # 按钮1点击事件
+    def button_start_calibration_clicked(self):
+        # 开始标定按钮点击事件
         self.append_text('开始标定')
         self.capturing = False
 
         print('开始标定')
 
-    def button2_clicked(self):
+    def button_switch_height_clicked(self):
         # 按钮2点击事件
         self.append_text('切换高度')
         self.image_count = 0
@@ -334,13 +334,13 @@ class MyUI(QWidget):
         self.height = (self.height + 1) % 3
         print('切换高度')
 
-    def button3_clicked(self):
+    def button_load_coord_clicked(self):
         # 按钮3点击事件
         self.append_text('加载坐标')  # 该功能还未制作
 
         print('加载坐标')
 
-    def button4_clicked(self):
+    def button_save_compution_clicked(self):
         # 按钮4点击事件
         print(self.image_points)
         print(self.map_points)
