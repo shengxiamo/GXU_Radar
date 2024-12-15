@@ -10,7 +10,7 @@ def export_engine( file, half, workspace=4, verbose=False, prefix=colorstr('Tens
     try:
         import tensorrt as trt
     except Exception:
-        if platform.system() == 'Linux':
+        if platform == 'Linux':
             check_requirements('nvidia-tensorrt', cmds='-U --index-url https://pypi.ngc.nvidia.com')
         import tensorrt as trt
 
