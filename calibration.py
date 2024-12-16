@@ -152,7 +152,7 @@ def video_capture_get():
             time.sleep(0.016)  # 60fps
 
 
-color = [(255, 255, 255), (0, 255, 0), (0, 0, 255)]
+color = [(255, 255, 255), (255, 0, 0), (0, 0, 255), (0, 255, 0)]
 
 
 class MyUI(QWidget):
@@ -327,21 +327,29 @@ class MyUI(QWidget):
         print('开始标定')
 
     def button_switch_height_clicked(self):
-        # 按钮2点击事件
-        self.append_text('切换高度')
+        # 切换高度按钮点击事件
         self.image_count = 0
         self.map_count = 0
-        self.height = (self.height + 1) % 3
+        self.height = (self.height + 1) % 4
+
+        if self.height == 0:
+            self.append_text("当前标定区域:地面")
+        if self.height == 1:
+            self.append_text("当前标定区域:公路区与梯形高地")
+        if self.height == 2:
+            self.append_text("当前标定区域:中央高地")
+        if self.height == 3:
+            self.append_text("当前标定区域:梯形高地增益点")
         print('切换高度')
 
     def button_load_coord_clicked(self):
-        # 按钮3点击事件
+        # 加载坐标按钮点击事件
         self.append_text('加载坐标')  # 该功能还未制作
 
         print('加载坐标')
 
     def button_save_compution_clicked(self):
-        # 按钮4点击事件
+        # 保存计算按钮点击事件
         print(self.image_points)
         print(self.map_points)
         for i in range(0, 3):
