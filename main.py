@@ -26,8 +26,6 @@ else:
     mask_image = cv2.imread("images/map_mask.jpg")  # 加载蓝方落点判断掩码
 
 # 导入战场每个高度的不同仿射变化矩阵
-M_height_r = loaded_arrays[1]   # R型高地
-M_height_g = loaded_arrays[2]   # 环形高地
 M_ground = loaded_arrays[0]     # 地面层       0 mm
 M_road = loaded_arrays[1]     # 公路区，梯形高地（低)     200 mm
 M_center_highland = loaded_arrays[2]     # 中央高地     300 mm
@@ -742,7 +740,7 @@ while True:
                                 filter.add_data(cls, X_M, Y_M)
                             else:
                                 # 不满足则继续套用中央高地层透视变换矩阵
-                                mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_height_g)
+                                mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_center_highland)
                                 # 限制转换后的点在地图范围内
                                 x_c = max(int(mapped_point[0][0][0]), 0)
                                 y_c = max(int(mapped_point[0][0][1]), 0)
@@ -756,7 +754,7 @@ while True:
                                     filter.add_data(cls, X_M, Y_M)
                                 else:
                                     # 不满足则继续套用梯形高地层透视变换矩阵
-                                    mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_height_r)
+                                    mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_Trapezoidal_highland)
                                     # 限制转换后的点在地图范围内
                                     x_c = max(int(mapped_point[0][0][0]), 0)
                                     y_c = max(int(mapped_point[0][0][1]), 0)
