@@ -26,9 +26,12 @@ else:
     mask_image = cv2.imread("images/map_mask.jpg")  # 加载蓝方落点判断掩码
 
 # 导入战场每个高度的不同仿射变化矩阵
-M_height_r = loaded_arrays[1]  # R型高地
-M_height_g = loaded_arrays[2]  # 环形高地
-M_ground = loaded_arrays[0]  # 地面层、公路层
+M_height_r = loaded_arrays[1]   # R型高地
+M_height_g = loaded_arrays[2]   # 环形高地
+M_ground = loaded_arrays[0]     # 地面层       0 mm
+M_road = loaded_arrays[1]     # 公路区，梯形高地（低)     200 mm
+M_center_highland = loaded_arrays[2]     # 中央高地     300 mm
+M_Trapezoidal_highland = loaded_arrays[3]     # 梯形高地（高）     600 mm
 
 # 确定地图画面像素，保证不会溢出
 height, width = mask_image.shape[:2]
