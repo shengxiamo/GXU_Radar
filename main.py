@@ -709,11 +709,11 @@ while True:
                         y = y + top
 
                         t1 = time.time()
-                        # 原图中装甲板的中心下沿作为待仿射变化的点
+                        # 原图中装甲板的中心下沿作为待透视变化的点
                         camera_point = np.array([[[min(x + 0.5 * w, img_x), min(y + 1.5 * h, img_y)]]],
-                                                dtype=np.float32)
-                        # 低到高依次仿射变化
-                        # 先套用地面层仿射变化矩阵
+                                                dtype=np.float32)   # mim函数的作用是防止预测坐标超出图像坐标系(yolo模型预测值可能超出图像坐标系)
+                        # 低到高依次透视变化
+                        # 先套用地面层透视变化矩阵
                         mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_ground)
                         # 限制转换后的点在地图范围内
                         x_c = max(int(mapped_point[0][0][0]), 0)
@@ -727,33 +727,47 @@ while True:
                             # Z_M = 0
                             filter.add_data(cls, X_M, Y_M)
                         else:
-                            # 不满足则继续套用R型高地层仿射变换矩阵
-                            mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_height_r)
+                            # 不满足则继续套用公路层透视变换矩阵
+                            mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_road)
                             # 限制转换后的点在地图范围内
                             x_c = max(int(mapped_point[0][0][0]), 0)
                             y_c = max(int(mapped_point[0][0][1]), 0)
                             x_c = min(x_c, width)
                             y_c = min(y_c, height)
-                            color = mask_image[y_c, x_c]  # 通过掩码图像，获取R型高地层的颜色：绿（0，255，0）
+                            color = mask_image[y_c, x_c]  # 通过掩码图像，获取公路层的颜色：红（0，0，255）
                             if color[1] > color[2] and color[1] > color[0]:
                                 X_M = x_c
                                 Y_M = y_c
-                                # Z_M = 400
+                                # Z_M = 200
                                 filter.add_data(cls, X_M, Y_M)
                             else:
-                                # 不满足则继续套用环形高地层仿射变换矩阵
+                                # 不满足则继续套用中央高地层透视变换矩阵
                                 mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_height_g)
                                 # 限制转换后的点在地图范围内
                                 x_c = max(int(mapped_point[0][0][0]), 0)
                                 y_c = max(int(mapped_point[0][0][1]), 0)
                                 x_c = min(x_c, width)
                                 y_c = min(y_c, height)
-                                color = mask_image[y_c, x_c]  # 通过掩码图像，获取环型高地层的颜色：蓝（255，0，0）
+                                color = mask_image[y_c, x_c]  # 通过掩码图像，获取中央高地层的颜色：蓝（255，0，0）
                                 if color[0] > color[2] and color[0] > color[1]:
                                     X_M = x_c
                                     Y_M = y_c
-                                    # Z_M = 600
+                                    # Z_M = 300
                                     filter.add_data(cls, X_M, Y_M)
+                                else:
+                                    # 不满足则继续套用梯形高地层透视变换矩阵
+                                    mapped_point = cv2.perspectiveTransform(camera_point.reshape(1, 1, 2), M_height_r)
+                                    # 限制转换后的点在地图范围内
+                                    x_c = max(int(mapped_point[0][0][0]), 0)
+                                    y_c = max(int(mapped_point[0][0][1]), 0)
+                                    x_c = min(x_c, width)
+                                    y_c = min(y_c, height)
+                                    color = mask_image[y_c, x_c]    # 通过掩码图像，获取梯形高地层的颜色：；绿（0，255，0）
+                                    if color[1] > color[0] and color[1] > color[2]:
+                                        X_M = x_c
+                                        Y_M = y_c
+                                        # Z_M = 600
+                                        filter.add_data(cls, X_M, Y_M)
 
     # 获取所有识别到的机器人坐标
     all_filter_data = filter.get_all_data()
