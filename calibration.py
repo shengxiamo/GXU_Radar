@@ -352,7 +352,7 @@ class MyUI(QWidget):
         # 保存计算按钮点击事件
         print(self.image_points)
         print(self.map_points)
-        for i in range(0, 3):
+        for i in range(0, 4):
             image_point = np.array(self.image_points[i], dtype=np.float32)
             map_point = np.array(self.map_points[i], dtype=np.float32)
             self.T.append(cv2.getPerspectiveTransform(image_point, map_point))
